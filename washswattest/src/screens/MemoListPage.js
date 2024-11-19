@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {memosState} from '../atoms/memoState';
 import {useRecoilState} from 'recoil';
@@ -6,6 +6,8 @@ import {CancelIcon} from '../assets/Icon';
 
 const MemoListPage = () => {
   const [memos, setMemos] = useRecoilState(memosState);
+  const flatListRef = useRef(null);
+
   const addMemo = () => {
     const newMemo = {
       id: Date.now().toString(),
@@ -38,9 +40,13 @@ const MemoListPage = () => {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={flatListRef}
         data={memos}
         keyExtractor={item => item.id}
         renderItem={({item}) => memoRender(item)}
+        onContentSizeChange={() => {
+          flatListRef.current?.scrollToEnd({animated: true});
+        }}
       />
       <TouchableOpacity style={styles.addButton} onPress={addMemo}>
         <Text style={styles.addButtonText}>추가</Text>
