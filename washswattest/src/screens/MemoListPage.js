@@ -6,6 +6,16 @@ import {CancelIcon} from '../assets/Icon';
 
 const MemoListPage = () => {
   const [memos, setMemos] = useRecoilState(memosState);
+  const addMemo = () => {
+    const newMemo = {
+      id: Date.now().toString(),
+      title: '제목없음',
+      description: '내용없음',
+      createdAt: new Date().toISOString().slice(0, 10),
+      updatedAt: new Date().toISOString().slice(0, 10),
+    };
+    setMemos(prevMemos => [...prevMemos, newMemo]);
+  };
   const memoRender = item => {
     return (
       <View style={styles.memoContainer}>
@@ -32,6 +42,9 @@ const MemoListPage = () => {
         keyExtractor={item => item.id}
         renderItem={({item}) => memoRender(item)}
       />
+      <TouchableOpacity style={styles.addButton} onPress={addMemo}>
+        <Text style={styles.addButtonText}>추가</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -58,7 +71,7 @@ const styles = StyleSheet.create({
   },
   memoHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     marginBottom: 4,
   },
@@ -66,7 +79,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
-    flex: 1,
   },
   memoDate: {
     fontSize: 12,
@@ -77,5 +89,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginTop: 4,
+  },
+  addButton: {
+    backgroundColor: '#000',
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
