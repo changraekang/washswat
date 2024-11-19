@@ -7,10 +7,19 @@ import {CancelIcon} from '../assets/Icon';
 const MemoListPage = () => {
   const [memos, setMemos] = useRecoilState(memosState);
   const flatListRef = useRef(null);
+  const existingIds = useRef(new Set(memos.map(memo => memo.id)));
+  const generateId = () => {
+    let newId = Math.random().toString(36).substring(2);
+    while (existingIds.current.has(newId)) {
+      newId = Math.random().toString(36).substring(2);
+    }
+    existingIds.current.add(newId); // 새 ID를 Set에 추가
+    return newId;
+  };
 
   const addMemo = () => {
     const newMemo = {
-      id: Date.now().toString(),
+      id: generateId(),
       title: '제목없음',
       description: '내용없음',
       createdAt: new Date().toISOString().slice(0, 10),
@@ -18,32 +27,31 @@ const MemoListPage = () => {
     };
     setMemos(prevMemos => [...prevMemos, newMemo]);
   };
-  const memoRender = item => {
-    return (
-      <View style={styles.memoContainer}>
-        <View style={styles.memoTextContainer}>
-          <View style={styles.memoHeader}>
-            <Text style={styles.memoTitle}>{item.title}</Text>
-            <Text style={styles.memoDate}>{item.updatedAt}</Text>
-          </View>
-          <Text
-            style={styles.memoDescription}
-            numberOfLines={1}
-            ellipsizeMode="tail">
-            {item.description}
-          </Text>
+  const MemoItem = ({item}) => (
+    <View style={styles.memoContainer}>
+      <View style={styles.memoTextContainer}>
+        <View style={styles.memoHeader}>
+          <Text style={styles.memoTitle}>{item.title}</Text>
+          <Text style={styles.memoDate}>{item.updatedAt}</Text>
         </View>
-        <CancelIcon width={24} height={24} fill="#666" />
+        <Text
+          style={styles.memoDescription}
+          numberOfLines={1}
+          ellipsizeMode="tail">
+          {item.description}
+        </Text>
       </View>
-    );
-  };
+      <CancelIcon width={24} height={24} fill="#666" />
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <FlatList
         ref={flatListRef}
         data={memos}
         keyExtractor={item => item.id}
-        renderItem={({item}) => memoRender(item)}
+        renderItem={({item}) => <MemoItem item={item} />}
         onContentSizeChange={() => {
           flatListRef.current?.scrollToEnd({animated: true});
         }}
