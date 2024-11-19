@@ -1,4 +1,5 @@
 import React from 'react';
+import {RecoilRoot} from 'recoil';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {
@@ -27,20 +28,22 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="MemoList"
-          screenOptions={{
-            header: () => <Header title="메모 리스트" />, // Custom Header
-          }}>
-          <Stack.Screen
-            name="MemoList"
-            component={MemoListPage}
-            options={{title: '메모 리스트'}}
-          />
-          {/* 다른 페이지 추가 가능 */}
-        </Stack.Navigator>
-      </NavigationContainer>
+      <RecoilRoot>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="MemoList"
+            screenOptions={{
+              header: () => <Header title="메모 리스트" memoCnt={true} />, // Custom Header
+            }}>
+            <Stack.Screen
+              name="MemoList"
+              component={MemoListPage}
+              options={{title: '메모 리스트'}}
+            />
+            {/* 다른 페이지 추가 가능 */}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </RecoilRoot>
     </SafeAreaView>
   );
 }

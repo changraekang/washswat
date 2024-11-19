@@ -1,10 +1,16 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {memosState} from '../atoms/memoState';
+import {useRecoilState} from 'recoil';
+const Header = ({title, memoCnt}) => {
+  const [memos, setMemos] = useRecoilState(memosState);
 
-const Header = ({title}) => {
   return (
     <View style={styles.header}>
-      <Text style={styles.headerText}>{title}(0)</Text>
+      <Text style={styles.headerText}>
+        {title}
+        {memoCnt ? `(${memos.length})` : null}
+      </Text>
     </View>
   );
 };
