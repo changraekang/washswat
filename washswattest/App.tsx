@@ -9,8 +9,8 @@ import {
   useColorScheme,
 } from 'react-native';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import Header from './components/Header';
-import MemoListPage from './screens/MemoListPage';
+import Header from './src/components/Header';
+import MemoListPage from './src/screens/MemoListPage';
 
 const Stack = createNativeStackNavigator();
 

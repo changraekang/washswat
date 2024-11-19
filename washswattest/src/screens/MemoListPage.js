@@ -2,6 +2,7 @@ import React from 'react';
 import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {memosState} from '../atoms/memoState';
 import {useRecoilState} from 'recoil';
+import {CancelIcon} from '../assets/Icon';
 
 const MemoListPage = () => {
   const [memos, setMemos] = useRecoilState(memosState);
@@ -20,6 +21,7 @@ const MemoListPage = () => {
             {item.description}
           </Text>
         </View>
+        <CancelIcon width={24} height={24} fill="#666" />
       </View>
     );
   };
