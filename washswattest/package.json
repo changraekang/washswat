@@ -16,6 +16,7 @@
     "react-native": "0.76.2",
     "react-native-safe-area-context": "^4.14.0",
     "react-native-screens": "^4.1.0",
+    "react-native-svg": "^15.9.0",
     "recoil": "^0.7.7"
   },
   "devDependencies": {
