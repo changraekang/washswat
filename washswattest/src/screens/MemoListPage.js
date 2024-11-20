@@ -4,7 +4,7 @@ import {memosState} from '../atoms/memoState';
 import {useRecoilState} from 'recoil';
 import {CancelIcon} from '../assets/Icon';
 
-const MemoListPage = () => {
+const MemoListPage = ({navigation}) => {
   const [memos, setMemos] = useRecoilState(memosState);
   const flatListRef = useRef(null);
   const existingIds = useRef(new Set(memos.map(memo => memo.id)));
@@ -28,7 +28,9 @@ const MemoListPage = () => {
     setMemos(prevMemos => [...prevMemos, newMemo]);
   };
   const MemoItem = ({item}) => (
-    <View style={styles.memoContainer}>
+    <TouchableOpacity
+      style={styles.memoContainer}
+      onPress={() => navigation.navigate('MemoDetail', {id: item.id})}>
       <View style={styles.memoTextContainer}>
         <View style={styles.memoHeader}>
           <Text style={styles.memoTitle}>{item.title}</Text>
@@ -42,7 +44,7 @@ const MemoListPage = () => {
         </Text>
       </View>
       <CancelIcon width={24} height={24} fill="#666" />
-    </View>
+    </TouchableOpacity>
   );
 
   return (
