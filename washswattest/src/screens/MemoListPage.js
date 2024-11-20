@@ -27,11 +27,15 @@ const MemoListPage = ({navigation}) => {
     };
     setMemos(prevMemos => [...prevMemos, newMemo]);
   };
+
+  const deleteMemo = id => {
+    setMemos(prevMemos => prevMemos.filter(m => m.id !== id));
+  };
   const MemoItem = ({item}) => (
-    <TouchableOpacity
-      style={styles.memoContainer}
-      onPress={() => navigation.navigate('MemoDetail', {id: item.id})}>
-      <View style={styles.memoTextContainer}>
+    <View style={styles.memoContainer}>
+      <TouchableOpacity
+        style={styles.memoTextContainer}
+        onPress={() => navigation.navigate('MemoDetail', {id: item.id})}>
         <View style={styles.memoHeader}>
           <Text style={styles.memoTitle}>{item.title}</Text>
           <Text style={styles.memoDate}>{item.updatedAt}</Text>
@@ -42,9 +46,11 @@ const MemoListPage = ({navigation}) => {
           ellipsizeMode="tail">
           {item.description}
         </Text>
-      </View>
-      <CancelIcon width={24} height={24} fill="#666" />
-    </TouchableOpacity>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => deleteMemo(item.id)}>
+        <CancelIcon width={24} height={24} fill="#666" />
+      </TouchableOpacity>
+    </View>
   );
 
   return (
