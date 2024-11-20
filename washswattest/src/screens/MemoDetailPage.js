@@ -1,5 +1,11 @@
-import React, {useEffect} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useRecoilState, useSetRecoilState} from 'recoil';
 import {memoTitleState, memosState} from '../atoms/memoState';
 
@@ -10,14 +16,39 @@ const MemoDetailPage = ({route, navigation}) => {
 
   const memo = memos.find(m => m.id === id);
 
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(memo?.title || '');
+  const [editedDescription, setEditedDescription] = useState(
+    memo?.description || '',
+  );
+
   useEffect(() => {
     if (memo) {
       setMemoTitle(memo.title); // 제목 상태 업데이트
+      setEditedTitle(memo.title);
+      setEditedDescription(memo.description);
     }
   }, [memo, setMemoTitle]);
+
   const deleteMemo = () => {
     setMemos(prevMemos => prevMemos.filter(m => m.id !== id));
     navigation.goBack();
+  };
+
+  const saveMemo = () => {
+    setMemos(prevMemos =>
+      prevMemos.map(m =>
+        m.id === id
+          ? {
+              ...m,
+              title: editedTitle,
+              description: editedDescription,
+              updatedAt: new Date().toISOString().slice(0, 10),
+            }
+          : m,
+      ),
+    );
+    setIsEditing(false);
   };
 
   if (!memo) {
@@ -32,14 +63,35 @@ const MemoDetailPage = ({route, navigation}) => {
     <View style={styles.container}>
       {/* 상단 제목 */}
       <View style={styles.header}>
-        <Text style={styles.title}>{memo.title}</Text>
+        {isEditing ? (
+          <TextInput
+            style={styles.title}
+            value={editedTitle}
+            onChangeText={setEditedTitle}
+          />
+        ) : (
+          <Text style={styles.title}>{memo.title}</Text>
+        )}
         <View style={styles.actionButtons}>
-          <TouchableOpacity>
-            <Text style={styles.actionButton}>편집</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={deleteMemo}>
-            <Text style={styles.actionButton}>삭제</Text>
-          </TouchableOpacity>
+          {isEditing ? (
+            <>
+              <TouchableOpacity onPress={saveMemo}>
+                <Text style={styles.actionButton}>수정</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setIsEditing(false)}>
+                <Text style={styles.actionButton}>취소</Text>
+              </TouchableOpacity>
+            </>
+          ) : (
+            <>
+              <TouchableOpacity onPress={() => setIsEditing(true)}>
+                <Text style={styles.actionButton}>편집</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={deleteMemo}>
+                <Text style={styles.actionButton}>삭제</Text>
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
 
@@ -47,7 +99,16 @@ const MemoDetailPage = ({route, navigation}) => {
       <Text style={styles.date}>{memo.updatedAt}</Text>
 
       {/* 내용 표시 */}
-      <Text style={styles.description}>{memo.description}</Text>
+      {isEditing ? (
+        <TextInput
+          style={styles.description}
+          value={editedDescription}
+          onChangeText={setEditedDescription}
+          multiline
+        />
+      ) : (
+        <Text style={styles.description}>{memo.description}</Text>
+      )}
     </View>
   );
 };
