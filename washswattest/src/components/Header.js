@@ -1,14 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-import {memosState} from '../atoms/memoState';
-import {useRecoilState} from 'recoil';
-const Header = ({title, memoCnt}) => {
-  const [memos, setMemos] = useRecoilState(memosState);
+import {memoTitleState, memosState} from '../atoms/memoState';
 
+import {useRecoilValue} from 'recoil';
+const Header = ({title, memoCnt}) => {
+  const memoTitle = useRecoilValue(memoTitleState); // 제목 상태 읽기
+  const memos = useRecoilValue(memosState); // 전체 메모 상태 읽기
   return (
     <View style={styles.header}>
       <Text style={styles.headerText}>
-        {title}
+        {title ? title : memoTitle}
         {memoCnt ? `(${memos.length})` : null}
       </Text>
     </View>

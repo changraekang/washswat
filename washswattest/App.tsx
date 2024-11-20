@@ -11,6 +11,7 @@ import {
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import Header from './src/components/Header';
 import MemoListPage from './src/screens/MemoListPage';
+import MemoDetailPage from './src/screens/MemoDetailPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -32,15 +33,20 @@ function App(): React.JSX.Element {
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="MemoList"
-            screenOptions={{
-              header: () => <Header title="메모 리스트" memoCnt={true} />, // Custom Header
-            }}>
+            screenOptions={({route}) => ({
+              header: () => (
+                <Header
+                  title={route?.params?.title || ''}
+                  memoCnt={route?.params?.title ? true : false}
+                />
+              ),
+            })}>
             <Stack.Screen
               name="MemoList"
               component={MemoListPage}
-              options={{title: '메모 리스트'}}
+              initialParams={{title: '메모 리스트'}} // 기본 제목 설정
             />
-            {/* 다른 페이지 추가 가능 */}
+            <Stack.Screen name="MemoDetail" component={MemoDetailPage} />
           </Stack.Navigator>
         </NavigationContainer>
       </RecoilRoot>

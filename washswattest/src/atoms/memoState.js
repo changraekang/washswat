@@ -16,3 +16,8 @@ export const memosState = atom({
     },
   ],
 });
+
+export const memoTitleState = atom({
+  key: 'memoTitleState', // 고유 키
+  default: '메모', // 기본 제목
+});
